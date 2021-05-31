@@ -1,0 +1,35 @@
+<!-- Search form -->
+<!-- Topbar Search -->
+
+<div class="row">
+  <div class="col-8">
+    <div class="input-group mb-3">
+      <input
+        [(ngModel)]="model"
+        [ngbTypeahead]="search"
+        [inputFormatter]="formatter"
+        [resultFormatter]="formatter"
+        [editable]="false"
+        [class.is-invalid]="searchFailed"
+        (selectItem)="selectSecurity($event)"
+        (click)="clear()"
+        id="typeahead-http"
+        type="text"
+        class="form-control bg-light border-0 small"
+        name="search"
+        placeholder="Search for stocks..."
+      />
+      <div class="input-group-append">
+        <span class="input-group-text bg-primary text-white"
+          ><i class="fas fa-search fa-sm"></i
+        ></span>
+      </div>
+    </div>
+  </div>
+  <div class="col-4">
+    <p *ngIf="searching" class="form-text text-muted">searching...</p>
+    <p *ngIf="searchFailed" class="form-text text-danger">
+      Sorry, no results found!
+    </p>
+  </div>
+</div>

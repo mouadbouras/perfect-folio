@@ -1,0 +1,13 @@
+<div class="container d-flex align-items-center justify-content-center">
+  <div class="text-center py-5">
+    <div *ngIf="errorData" class="alert alert-danger" role="alert">
+      Unable to login! An error occured: {{ errorData.code }}
+    </div>
+
+    <firebase-ui
+      (signInSuccessWithAuthResult)="successCallback($event)"
+      (signInFailure)="errorCallback($event)"
+      (uiShown)="uiShownCallback()"
+    ></firebase-ui>
+  </div>
+</div>

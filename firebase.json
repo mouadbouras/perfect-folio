@@ -1,0 +1,13 @@
+{
+  "hosting": {
+    "public": "./dist/perfect-folio",
+    "site": "perfect-folio-2",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}

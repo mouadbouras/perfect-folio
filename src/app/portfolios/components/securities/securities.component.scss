@@ -1,0 +1,13 @@
+.percentage-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  input {
+    max-width: 4.3rem;
+  }
+
+  span {
+    margin-left: 1rem;
+  }
+}
