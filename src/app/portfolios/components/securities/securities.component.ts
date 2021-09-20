@@ -23,7 +23,6 @@ export class SecuritiesComponent {
   }
 
   clearControl(control: AbstractControl): void {
-    console.log(control as FormControl);
     if ((control as FormControl).pristine) {
       (control as FormControl).setValue(null);
     }

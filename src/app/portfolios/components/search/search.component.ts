@@ -62,19 +62,17 @@ export class SearchComponent extends BaseComponent implements OnDestroy {
       .getQuoteForSymbol(security.symbol)
       .pipe(
         takeUntil(this.destroy$),
-        tap(console.log),
         map((quote: AlphaVantageQuote) => {
-          return ({
+          return {
             name: security.name,
             symbol: security.symbol,
-            price: quote.price,
+            price: +quote.price,
             currency: security.currency,
-            usPrice: quote.price,
+            usPrice: 0,
             percentage: 0,
             count: 0,
-          } as unknown) as Security;
+          } as unknown as Security;
         }),
-        tap(console.log),
         tap((security: Security) => {
           this.securitySelected.emit(security);
           this.clear();

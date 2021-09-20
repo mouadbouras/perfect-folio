@@ -22,7 +22,6 @@ export class LoginPage implements OnInit {
       .pipe(
         take(1),
         tap((user) => {
-          console.log(user);
           if (user) {
             this.router.navigateByUrl('/portfolios');
           }

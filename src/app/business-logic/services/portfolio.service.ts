@@ -4,7 +4,7 @@ import {
   EntityCollectionServiceElementsFactory,
 } from '@ngrx/data';
 import { forkJoin, Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { Portfolio, Security } from '../models';
 import { AlphavantageService } from './alphavantage.service';
 import { cloneDeep } from 'lodash';
@@ -53,8 +53,35 @@ export class PortfolioService extends EntityCollectionServiceBase<Portfolio> {
     return forkJoin(rates) as Observable<{ currency: string; rate: number }[]>;
   }
 
+  updatePortfolioSecurityPrices(portfolio: Portfolio): Observable<Portfolio> {
+    const updatedPortfolio = cloneDeep(portfolio);
+    const securityQuotes$ = updatedPortfolio.securities.map((security) =>
+      this.alphavantageService.getQuoteForSymbol(security.symbol)
+    );
+
+    return forkJoin(securityQuotes$).pipe(
+      map((quotes) => {
+        updatedPortfolio.securities = updatedPortfolio.securities.map(
+          (security) => {
+            const quote = quotes.find(
+              (quote) => quote.symbol === security.symbol
+            );
+            security.price = +quote.price;
+            security.usPrice = 0;
+            return security;
+          }
+        );
+
+        return updatedPortfolio;
+      })
+    );
+  }
+
   balancePortfolio(portfolio: Portfolio): Observable<Portfolio> {
+    console.log('balance');
+
     const balancedPortfolio = cloneDeep(portfolio);
+
     return this.getRates(balancedPortfolio.securities, portfolio.currency).pipe(
       map((rates: { currency: string; rate: number }[]) => {
         balancedPortfolio.securities = this.calculateSecurityCount(
@@ -79,6 +106,9 @@ export class PortfolioService extends EntityCollectionServiceBase<Portfolio> {
     const securities = [];
     const portfolioRate =
       0 || rates.find((r) => r.currency === portfolio.currency)?.rate;
+
+    console.log(portfolioRate);
+
     const usInvestment = portfolio.investment * portfolioRate;
 
     portfolio.securities.forEach((s) => {

@@ -31,7 +31,6 @@ export class PortfoliosPage extends BaseComponent implements OnInit {
   }
 
   initPortfolios(): void {
-    console.log('init');
     this.form = this.fb.group({});
     this.portfolioService.getAll();
     this.portfolios = {};
@@ -40,16 +39,13 @@ export class PortfoliosPage extends BaseComponent implements OnInit {
         takeUntil(this.destroy$),
         tap((portfolios) => {
           portfolios.forEach((p) => {
-            console.log(p);
-            console.log(
-              !this.portfolios[p.key] || !isEqual(this.portfolios[p.key], p)
-            );
             if (
               !this.portfolios[p.key] ||
               !isEqual(this.portfolios[p.key], p)
             ) {
               this.portfolios[p.key] = p;
             }
+            console.log('equal');
           });
         })
       )
@@ -81,14 +77,19 @@ export class PortfoliosPage extends BaseComponent implements OnInit {
   }
 
   onBalance(key: string): void {
+    const portfolio = this.getPortfolioFromKey(key);
     this.portfolioService
-      .balancePortfolio(this.getPortfolioFromKey(key))
-      .pipe(switchMap((portfolio) => this.portfolioService.update(portfolio)))
+      .updatePortfolioSecurityPrices(portfolio)
+      .pipe(
+        switchMap((portfolio) =>
+          this.portfolioService.balancePortfolio(portfolio)
+        ),
+        switchMap((portfolio) => this.portfolioService.update(portfolio))
+      )
       .subscribe(() => this.initPortfolios());
   }
 
   onDelete(key: string): void {
-    console.log('edit ' + key);
     this.portfolioService
       .delete(key)
       .pipe(take(1))

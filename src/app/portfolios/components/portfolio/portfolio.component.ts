@@ -164,7 +164,6 @@ export class PortfolioComponent {
   }
 
   onDelete(key: string): void {
-    console.log(key);
     this.toDelete = key;
   }
 
