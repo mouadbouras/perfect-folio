@@ -8,4 +8,6 @@ export interface Portfolio {
   investment?: number;
   currency?: Currency;
   cash?: number;
+  createdDate?: number;
+  editedDate?: number;
 }

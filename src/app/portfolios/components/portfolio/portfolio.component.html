@@ -3,7 +3,14 @@
   <div class="card shadow mb-4">
     <!-- Card Header - Dropdown -->
     <div
-      class="card-header py-3 d-flex flex-row align-items-center justify-content-between"
+      class="
+        card-header
+        py-3
+        d-flex
+        flex-row
+        align-items-center
+        justify-content-between
+      "
     >
       <div class="w-100">
         <p *ngIf="!isEditMode" class="h5 font-weight-bold text-gray-800">
@@ -211,7 +218,7 @@
           Cancel
         </button>
         <button
-          (click)="delete.emit(toDelete)"
+          (click)="onConfirmDelete()"
           type="button"
           data-dismiss="modal"
           class="btn btn-danger"

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { PortfolioService } from '../business-logic/services/portfolio.service';
 import { Portfolio } from '../business-logic/models';
 import { BaseComponent } from '../base.component';
@@ -14,9 +14,18 @@ import { isEqual } from 'lodash';
 export class PortfoliosPage extends BaseComponent implements OnInit {
   public form: FormGroup;
   public portfolios: { [key: string]: Portfolio };
+  public toDelete: string;
 
   get portfolioKeys(): string[] {
     return this.portfolios ? Object.keys(this.portfolios) : [];
+  }
+
+  get portfolioValues(): Portfolio[] {
+    return this.portfolios
+      ? Object.values(this.portfolios).sort(
+          (f, s) => s.createdDate - f.createdDate
+        )
+      : [];
   }
 
   constructor(
@@ -37,6 +46,9 @@ export class PortfoliosPage extends BaseComponent implements OnInit {
     this.portfolioService.entities$
       .pipe(
         takeUntil(this.destroy$),
+        // map((portfolios) => {
+        //   return portfolios.sort((f, s) => s.createdDate - f.createdDate);
+        // }),
         tap((portfolios) => {
           portfolios.forEach((p) => {
             if (
@@ -45,7 +57,6 @@ export class PortfoliosPage extends BaseComponent implements OnInit {
             ) {
               this.portfolios[p.key] = p;
             }
-            console.log('equal');
           });
         })
       )
@@ -57,6 +68,7 @@ export class PortfoliosPage extends BaseComponent implements OnInit {
   }
 
   onAddPortfolio(): void {
+    const currentTime = Date.now();
     this.portfolioService
       .add({
         name: 'New Portfolio',
@@ -64,6 +76,8 @@ export class PortfoliosPage extends BaseComponent implements OnInit {
         investment: 0,
         currency: 'USD',
         cash: 0,
+        createdDate: currentTime,
+        editedDate: currentTime,
       } as Portfolio)
       .pipe(take(1))
       .subscribe();
@@ -90,9 +104,16 @@ export class PortfoliosPage extends BaseComponent implements OnInit {
   }
 
   onDelete(key: string): void {
+    this.toDelete = key;
+  }
+
+  onConfirmDelete(): void {
     this.portfolioService
-      .delete(key)
-      .pipe(take(1))
+      .delete(this.toDelete)
+      .pipe(
+        take(1),
+        tap(() => (this.toDelete = ''))
+      )
       .subscribe(() => this.initPortfolios());
   }
 

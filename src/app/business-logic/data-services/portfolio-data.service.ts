@@ -31,9 +31,14 @@ export class PortfolioDataService extends DefaultDataService<Portfolio> {
   }
 
   update(update: Update<Portfolio>): Observable<Portfolio> {
-    return from(
-      this.portfolioRepository.update(update.changes as Portfolio)
-    ).pipe(map(() => update.changes as Portfolio));
+    const updatedPortfolio = {
+      ...update.changes,
+      ...{ editedDate: Date.now() },
+    } as Portfolio;
+
+    return from(this.portfolioRepository.update(updatedPortfolio)).pipe(
+      map(() => updatedPortfolio)
+    );
   }
 
   delete(id: number | string): Observable<number | string> {

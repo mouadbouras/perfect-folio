@@ -78,8 +78,6 @@ export class PortfolioService extends EntityCollectionServiceBase<Portfolio> {
   }
 
   balancePortfolio(portfolio: Portfolio): Observable<Portfolio> {
-    console.log('balance');
-
     const balancedPortfolio = cloneDeep(portfolio);
 
     return this.getRates(balancedPortfolio.securities, portfolio.currency).pipe(
@@ -106,8 +104,6 @@ export class PortfolioService extends EntityCollectionServiceBase<Portfolio> {
     const securities = [];
     const portfolioRate =
       0 || rates.find((r) => r.currency === portfolio.currency)?.rate;
-
-    console.log(portfolioRate);
 
     const usInvestment = portfolio.investment * portfolioRate;
 

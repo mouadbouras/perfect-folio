@@ -31,7 +31,6 @@ export class LoginPage implements OnInit {
   }
 
   successCallback(signInSuccessData: FirebaseUISignInSuccessWithAuthResult) {
-    console.log(signInSuccessData);
     this.router.navigate(['/portfolios']);
   }
 

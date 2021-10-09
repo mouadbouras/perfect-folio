@@ -24,14 +24,15 @@
 
         <!-- Content Row -->
         <form [formGroup]="form">
-          <div *ngFor="let key of portfolioKeys" class="row">
+          <div *ngFor="let portfolio of portfolioValues" class="row">
             <app-portfolio
               class="col"
-              [portfolio]="portfolios[key]"
-              (portfolioFormReady)="portfolioFormInitialized(key, $event)"
+              [portfolio]="portfolios[portfolio.key]"
+              (portfolioFormReady)="portfolioFormInitialized(portfolio.key, $event)"
               (balance)="onBalance($event)"
               (edit)="onEdit($event)"
               (delete)="onDelete($event)"
+              (confirmDelete)="onConfirmDelete()"
             ></app-portfolio>
           </div>
         </form>

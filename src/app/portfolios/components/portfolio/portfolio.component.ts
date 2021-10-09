@@ -1,12 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Portfolio, Security } from 'src/app/business-logic/models';
 import { cloneDeep } from 'lodash';
@@ -28,6 +20,7 @@ export class PortfolioComponent {
 
   @Output() portfolioFormReady = new EventEmitter<FormGroup>();
   @Output() delete = new EventEmitter<string>();
+  @Output() confirmDelete = new EventEmitter<void>();
   @Output() balance = new EventEmitter<string>();
   @Output() edit = new EventEmitter<string>();
 
@@ -46,7 +39,6 @@ export class PortfolioComponent {
   }
 
   form?: FormGroup;
-  toDelete: string;
   public isEditMode: boolean = false;
 
   constructor(private fb: FormBuilder) {}
@@ -73,6 +65,8 @@ export class PortfolioComponent {
         [Validators.required, PortfolioValidators.currencyValidator],
       ],
       cash: this._portfolio.cash,
+      createdDate: this._portfolio.createdDate,
+      editedDate: this._portfolio.editedDate,
     });
     this.initSecurities();
 
@@ -164,10 +158,14 @@ export class PortfolioComponent {
   }
 
   onDelete(key: string): void {
-    this.toDelete = key;
+    this.delete.emit(key);
+  }
+
+  onConfirmDelete(): void {
+    this.confirmDelete.emit();
   }
 
   onCancelDelete(): void {
-    this.toDelete = '';
+    this.delete.emit('');
   }
 }
