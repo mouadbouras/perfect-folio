@@ -32,6 +32,7 @@
     "@types/lodash": "^4.14.168",
     "bootstrap": "^4.5.0",
     "firebase": "^8.4.1",
+    "firebaseui": "^5.0.0",
     "firebaseui-angular": "^5.1.2",
     "lodash": "^4.17.21",
     "rxjs": "~6.6.0",
