@@ -25,7 +25,13 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-
+      
+      - name: Install Dependencies
+        run: npm install
+      
+      - name: Build
+        run: npm run build -- --prod
+      
       - name: Deploy to Firebase
         uses: lowply/deploy-firebase@v0.0.5
         env:
